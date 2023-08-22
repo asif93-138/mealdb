@@ -61,6 +61,9 @@
 <div id="name" class="row row-cols-1 row-cols-md-3 g-4">
 
 </div>
+<div id="sa" class="text-center mt-5">
+<button onclick="shAll()" class="hov btn btn-outline-warning" type="button">Show All</button>
+</div>
 <!-- The Modal -->
 <div class="modal" id="myModal">
   <div class="modal-dialog modal-dialog-centered">
@@ -120,13 +123,23 @@
 </footer>
 
 <script>
+function shAll() {
+document.getElementById('sa').style.display='none';
+if (document.getElementById("search").value=="") {reLoad("fish")} else {reLoad(document.getElementById("search").value)}
+function reLoad(data) {
+fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${data}`)
+      .then(response => response.json())
+      .then(json => sArr(json.meals))
+function sArr(data) {if (!data) {document.getElementById("name").innerHTML = "<h4 class='text-center'>No results found!</h4>";document.getElementById('sa').style.display='none';} else {dD(data);}}
+}
+}
 function showM(data) {
 fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${data}`)
       .then(response => response.json())
       .then(json => chM(json.meals[0]))
 }
 function chM(data) {
-console.log(data.strMealThumb);
+
 document.getElementById("modal-header").innerHTML = data.strMeal;
 document.getElementById("mod-img").src = data.strMealThumb;
 document.getElementById("mod-p").innerHTML = data.strInstructions;
@@ -134,25 +147,29 @@ document.getElementById("mod-p").innerHTML = data.strInstructions;
 loadH("fish");
 function searchM() {
 loadH(document.getElementById("search").value);
+document.getElementById('sa').style.display="block";
 }
 function loadH(data) {
 fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${data}`)
       .then(response => response.json())
-      .then(json => dD(json.meals))
+      .then(json => sArr(json.meals))
+function sArr(data) {if (!data) {document.getElementById("name").innerHTML = "<h4 class='text-center'>No results found!</h4>";document.getElementById('sa').style.display='none';} else {var arr = data.slice(0,6);dD(arr);}}
 }
-function dD(data) {
-if (!data) {document.getElementById("name").innerHTML = "<h4 class='text-center'>No results found!</h4>";} else {
-var txt = "";
-for (var i = 0; i < data.length; i++) {
+function dD(arr) {
+
+
 console.log();
+var txt = "";
+for (var i = 0; i < arr.length; i++) {
+
 txt = txt + `
 <div class="col">
     <div class="card">
-      <img src="${data[i].strMealThumb}" class="card-img-top" alt="...">
+      <img src="${arr[i].strMealThumb}" class="card-img-top" alt="...">
       <div class="card-body">
-        <h5 class="card-title">${data[i].strMeal}</h5>
+        <h5 class="card-title">${arr[i].strMeal}</h5>
         <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-  <button onclick="showM(${data[i].idMeal})" type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#myModal">
+  <button onclick="showM(${arr[i].idMeal})" type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#myModal">
     Show Details
   </button>
 </div>
@@ -162,7 +179,7 @@ txt = txt + `
   </div>
 `;
 } 
-document.getElementById("name").innerHTML = txt;}
+document.getElementById("name").innerHTML = txt;
 }
 </script>
 
