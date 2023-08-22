@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API</title>
+<!-- Latest compiled and minified CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Latest compiled JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script> 
+<style>
+.backd {background-image: url("images/banner_1.png"); padding:0!important;}
+.slide {background-color:rgba(0, 0, 0, 0.5);height:500px;}
+.hov:hover {color:white!important;}
+@media screen and (max-width: 575px) {
+.ful {width:100%!important;padding-right:10px;padding-left:10px;}
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<nav class="container d-flex justify-content-between align-items-center my-4">
+<img class="" src="images/Tasty_HUT.png"><button type="button" class="hov btn btn-outline-warning">Sign Up</button>
+</nav>
+
+
+<section class="container-fluid backd">
+
+<article class="slide pt-5">
+
+<div class="pt-5 text-center ful w-50 mx-auto">
+<h1 class="text-light pt-5"><strong>Taste Our Delicious Best Foods</strong></h1>
+<p class="text-light my-4">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humou.</p>
+
+  <div class="input-group mb-3">
+    <input id="search" type="text" class="form-control" placeholder="Search">
+    <button onclick="searchM()" class="hov btn btn-warning" type="submit">Search</button> 
+  </div>
+</div>
+
+</article>
+
+</section>
+
+</header>
+
+<main class="container mt-5 pt-5">
+<div class="text-center mb-4">
+<h2><strong>Your Favourite Food</strong></h2>
+</div>
+
+<div id="name" class="row row-cols-1 row-cols-md-3 g-4">
+
+</div>
+<!-- The Modal -->
+<div class="modal" id="myModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 id="modal-header" class="modal-title"></h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <img class="img-fluid" id="mod-img" src=""><p id="mod-p"></p>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-warning" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer class="container d-md-flex justify-content-between pt-5 my-5">
+
+<section class="">
+<h6><strong>Section</strong></h6>
+<p><small>Home</small></p>
+<p><small>Features</small></p>
+<p><small>Pricing</small></p>
+<p><small>FAQs</small></p>
+<p><small>About</small></p>
+</section>
+<section class="">
+<h6><strong>Section</strong></h6>
+<p><small>UIUX Design</small></p>
+<p><small>Product Design</small></p>
+<p><small>Back End Developer</small></p>
+<p><small>Front End Developer</small></p>
+</section>
+<section class="">
+<h6><strong>Resource</strong></h6>
+<p><small>FAQ</small></p>
+<p><small>Support</small></p>
+<p><small>Privacy Policy</small></p>
+<p><small>Terms of Service</small></p>
+</section>
+<section class="">
+<h6><strong>Subscribe to our newsletter</strong></h6>
+<p><small>There are many variations of passages of available, but the majority have suffered</small></p>
+<p class="d-flex justify-items-center"><input class="form-control d-inline w-auto" type="email" placeholder="Email address"><button class="hov btn btn-outline-warning" type="button">Subscribe</button></p>
+</section>
+
+</footer>
+
+<script>
+function showM(data) {
+fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${data}`)
+      .then(response => response.json())
+      .then(json => chM(json.meals[0]))
+}
+function chM(data) {
+console.log(data.strMealThumb);
+document.getElementById("modal-header").innerHTML = data.strMeal;
+document.getElementById("mod-img").src = data.strMealThumb;
+document.getElementById("mod-p").innerHTML = data.strInstructions;
+}
+loadH("fish");
+function searchM() {
+loadH(document.getElementById("search").value);
+}
+function loadH(data) {
+fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${data}`)
+      .then(response => response.json())
+      .then(json => dD(json.meals))
+}
+function dD(data) {
+if (!data) {document.getElementById("name").innerHTML = "<h4 class='text-center'>No results found!</h4>";} else {
+var txt = "";
+for (var i = 0; i < data.length; i++) {
+console.log();
+txt = txt + `
+<div class="col">
+    <div class="card">
+      <img src="${data[i].strMealThumb}" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">${data[i].strMeal}</h5>
+        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+  <button onclick="showM(${data[i].idMeal})" type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#myModal">
+    Show Details
+  </button>
+</div>
+
+      </div>
+    </div>
+  </div>
+`;
+} 
+document.getElementById("name").innerHTML = txt;}
+}
+</script>
+
+</body>
+
+</html>
